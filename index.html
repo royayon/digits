@@ -1,83 +1,131 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-H0NW5Z2MYC"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
 
-      gtag('config', 'G-H0NW5Z2MYC');
-    </script>
-    <title>Digit Recognition WebApp</title>
-    <meta name="description" content="Simple Machine Learning Model into an WebApp using TensorFlow.js">
-    <meta name="keywords" content="Machine Learning, TensorFlow.js">
-    <meta name="author" content="Carlos Aguayo">
-    <style>
-      body {
-        touch-action: none; /*https://developer.mozilla.org/en-US/docs/Web/CSS/touch-action*/
-        font-family: "Roboto";
-      }
-      h1 {
-        margin: 50px;
-        font-size: 70px;
-        text-align: center;
-      }
-      #paint {
-        border:3px solid red;
-        margin: auto;
-      }
-      #predicted { 
-        font-size: 60px;
-        margin-top: 60px;
-        text-align: center;
-      }
-      #number {
-        border: 3px solid black;
-        margin: auto;
-        margin-top: 30px;
-        text-align: center;
-        vertical-align: middle;
-      }
-      #clear {
-        margin: auto;
-        margin-top: 70px;
-        padding: 30px;
-        text-align: center;
-      }
-    </style>
-  </head>
-  <body>
-    <!--<script type="text/javascript" src="http://livejs.com/live.js"></script>-->
-    <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.5.2/dist/tf.min.js"></script>
-    <h1>Digit Recognition WebApp</h1>
-    <div id="paint">
-      <canvas id="myCanvas"></canvas>
-    </div>
-    <div id="predicted">
-      Recognized digit
-      <div id="number"></div>
-      <button id="clear">Clear</button>
-    </div>
-    <script>
+<head>
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-H0NW5Z2MYC"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+    gtag('js', new Date());
+
+    gtag('config', 'G-H0NW5Z2MYC');
+  </script>
+  <title>Digit Recognition WebApp</title>
+  <meta name="description" content="Simple Machine Learning Model into an WebApp using TensorFlow.js">
+  <meta name="keywords" content="Machine Learning, TensorFlow.js">
+  <meta name="author" content="Carlos Aguayo">
+  <link href="https://fonts.googleapis.com/css?family=Bellota&display=swap" rel="stylesheet">
+  <style>
+    body {
+      touch-action: none;
+      /*https://developer.mozilla.org/en-US/docs/Web/CSS/touch-action*/
+      font-family: "Roboto";
+      background-image: linear-gradient(141deg, #9fb8ad 0%, #1fc8db 51%, #2cb5e8 75%);
+    }
+
+    h1 {
+      margin: 20px;
+      font-size: 70px;
+      text-align: center;
+      color: #3700B3;
+      font-family: 'Bellota', cursive;
+    }
+
+    #paint {
+      border: 5px solid red;
+      margin: auto;
+    }
+
+    #predicted {
+      font-size: 60px;
+      margin-top: 60px;
+      color: #a00037;
+      text-align: center;
+      font-family: 'Bellota', cursive;
+    }
+
+    #number {
+      border: 3px solid black;
+      margin: auto;
+      margin-top: 30px;
+      text-align: center;
+      vertical-align: middle;
+    }
+
+    #clear {
+      margin: auto;
+      margin-top: 70px;
+      padding: 30px;
+      text-align: center;
+      background-color: #00b686;
+      /* border: none;
+      text-decoration: none; */
+      outline-style: none;
+      border-radius: 25px;
+    }
+  </style>
+</head>
+
+<body>
+  <!--<script type="text/javascript" src="http://livejs.com/live.js"></script>-->
+  <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.5.2/dist/tf.min.js"></script>
+  <h1>Digit Recognition</h1>
+
+  <div id="paint">
+    <canvas id="myCanvas"></canvas>
+    <center>
+      <h4
+        style="color: rgb(245, 239, 239);font-family: 'Bellota';background-color: #0d47a1; border-radius: 15px;padding: 4px;">
+        -by
+        Ayon Roy</h4>
+    </center>
+  </div>
+
+  <div id="predicted">
+    Recognized digit
+    <div id="number"></div>
+    <button id="clear">Clear</button>
+  </div>
+  <script>
     var isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
     if (isMobile) {
-      $('#paint').css({'width': '60%'});
-      $('#number').css({'width': '30%', 'font-size': '240px'});
-      $('#clear').css({'font-size': '50px'});
+      $('#paint').css({
+        'width': '60%'
+      });
+      $('#number').css({
+        'width': '30%',
+        'font-size': '240px'
+      });
+      $('#clear').css({
+        'font-size': '50px'
+      });
     } else {
-      $('#paint').css({'width': '300px'});
-      $('#number').css({'width': '150px', 'font-size': '120px'});
-      $('#clear').css({'font-size': '35px'});
+      $('#paint').css({
+        'width': '300px'
+      });
+      $('#number').css({
+        'width': '150px',
+        'font-size': '120px'
+      });
+      $('#clear').css({
+        'font-size': '35px'
+      });
     }
 
     var cw = $('#paint').width();
-    $('#paint').css({'height': cw + 'px'});
+    $('#paint').css({
+      'height': cw + 'px'
+    });
 
     cw = $('#number').width();
-    $('#number').css({'height': cw + 'px'});
+    $('#number').css({
+      'height': cw + 'px'
+    });
 
     // From https://www.html5canvastutorials.com/labs/html5-canvas-paint-application/
     var canvas = document.getElementById('myCanvas');
@@ -87,9 +135,12 @@
     canvas.width = parseInt(compuetedStyle.getPropertyValue('width'));
     canvas.height = parseInt(compuetedStyle.getPropertyValue('height'));
 
-    var mouse = {x: 0, y: 0};
+    var mouse = {
+      x: 0,
+      y: 0
+    };
 
-    canvas.addEventListener('mousemove', function(e) {
+    canvas.addEventListener('mousemove', function (e) {
       mouse.x = e.pageX - this.offsetLeft;
       mouse.y = e.pageY - this.offsetTop;
     }, false);
@@ -99,21 +150,21 @@
     context.lineCap = 'round';
     context.strokeStyle = '#0000FF';
 
-    canvas.addEventListener('mousedown', function(e) {
+    canvas.addEventListener('mousedown', function (e) {
       context.moveTo(mouse.x, mouse.y);
       context.beginPath();
       canvas.addEventListener('mousemove', onPaint, false);
     }, false);
 
-    canvas.addEventListener('mouseup', function() {
+    canvas.addEventListener('mouseup', function () {
       $('#number').html('<img id="spinner" src="spinner.gif"/>');
       canvas.removeEventListener('mousemove', onPaint, false);
       var img = new Image();
-      img.onload = function() {
+      img.onload = function () {
         context.drawImage(img, 0, 0, 28, 28);
         data = context.getImageData(0, 0, 28, 28).data;
         var input = [];
-        for(var i = 0; i < data.length; i += 4) {
+        for (var i = 0; i < data.length; i += 4) {
           input.push(data[i + 2] / 255);
         }
         predict(input);
@@ -121,12 +172,12 @@
       img.src = canvas.toDataURL('image/png');
     }, false);
 
-    var onPaint = function() {
+    var onPaint = function () {
       context.lineTo(mouse.x, mouse.y);
       context.stroke();
     };
 
-    tf.loadLayersModel('model/model.json').then(function(model) {
+    tf.loadLayersModel('model/model.json').then(function (model) {
       window.model = model;
     });
 
@@ -150,23 +201,26 @@
       }));
     }, false);
 
-    var predict = function(input) {
+    var predict = function (input) {
       if (window.model) {
-        window.model.predict([tf.tensor(input).reshape([1, 28, 28, 1])]).array().then(function(scores){
+        window.model.predict([tf.tensor(input).reshape([1, 28, 28, 1])]).array().then(function (scores) {
           scores = scores[0];
           predicted = scores.indexOf(Math.max(...scores));
           $('#number').html(predicted);
         });
       } else {
         // The model takes a bit to load, if we are too fast, wait
-        setTimeout(function(){predict(input)}, 50);
+        setTimeout(function () {
+          predict(input)
+        }, 50);
       }
     }
 
-    $('#clear').click(function(){
+    $('#clear').click(function () {
       context.clearRect(0, 0, canvas.width, canvas.height);
       $('#number').html('');
     });
-    </script>
-  </body>
+  </script>
+</body>
+
 </html>
